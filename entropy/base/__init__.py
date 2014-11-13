@@ -2,18 +2,10 @@ import datetime
 
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes import generic
-# Comment out this because ImagesMixin has been moved to commoncode/images
-# from django.contrib.contenttypes.generic import GenericRelation
-# from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.text import Truncator, slugify
 
-from ..fields import (
-    EnabledField,
-    ShortTitleField,
-    SlugField,
-    TitleField
-)
+from ..fields import EnabledField, ShortTitleField, SlugField, TitleField
 from .. import settings as entropy_settings
 
 
@@ -329,71 +321,6 @@ class PriorityMixin(models.Model):
 
     class Meta:
         abstract = True
-
-
-# FIXME this will probably be now commoncode/images
-# Images
-"""
-class ImageMixin(models.Model):
-    '''
-    Super neat ImageMixin model.
-
-    Apply this to the model that the Image model is relating
-    to via gfk.
-
-    The images will be available via:
-        parent_obj.image -- the first image object, no queries
-        parent_obj.images -- the queryset -- one query which is saved as
-            self._queryset for future use
-
-
-    In templates with Sorl
-
-    {% thumbnail parent_obj.image "200x200" crop="center" as image %}
-        <img src="{{ image.url }}">
-    {% endthumbnail %}
-
-    {% with parent_obj.images as images %}
-    {% for image in images %}
-        {% thumbnail image "200x200" crop="center" as image %}
-            <img src="{{ image.url }}">
-        {% endthumbnail %}
-    {% endfor %}
-    {% endwith %}
-
-    '''
-
-    image_set = GenericRelation('entropy.Image')
-
-    class Meta:
-        abstract = True
-
-    @property
-    def image(self):
-        try:
-            return self.image_set.all()[0]
-        except IndexError:
-            return None
-
-    @property
-    def images(self):
-        return self.image_set.all()[1:]
-
-    @property
-    def icon(self):
-        try:
-            return self.icons[0]
-        except IndexError:
-            return None
-
-    @property
-    def icons(self):
-        return list(Image.objects.filter(
-            content_type=ContentType.objects.get_for_model(self),
-            object_id=self.id,
-            is_icon=True
-        ))
-"""
 
 
 class BaseLinkMixin(models.Model):

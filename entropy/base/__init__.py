@@ -1,6 +1,6 @@
 import datetime
 
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.contrib.contenttypes import generic
 from django.db import models
 from django.utils.text import Truncator, slugify
@@ -152,7 +152,7 @@ class MetadataMixin(models.Model):
 class CreatedMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
-        get_user_model(),
+        settings.AUTH_USER_MODEL,
         blank=True,
         null=True,
         related_name='%(app_label)s_%(class)s_created_by'
@@ -174,7 +174,7 @@ class CreatedMixin(models.Model):
 class ModifiedMixin(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     modified_by = models.ForeignKey(
-        get_user_model(),
+        settings.AUTH_USER_MODEL,
         blank=True,
         null=True,
         related_name='%(app_label)s_%(class)s_modified_by'
@@ -195,7 +195,7 @@ class ModifiedMixin(models.Model):
 
 class OwnerMixin(models.Model):
     owned_by = models.ForeignKey(
-        get_user_model(),
+        settings.AUTH_USER_MODEL,
         blank=True,
         null=True,
         related_name='%(app_label)s_%(class)s_owned_by'

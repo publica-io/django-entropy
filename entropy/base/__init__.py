@@ -290,7 +290,7 @@ class PublishingMixin(StartEndMixin, EnabledMixin):
 
 # Functional Mixins
 class OrderingMixin(models.Model):
-    order = models.PositiveIntegerField(blank=True, default=0, index_db=True)
+    order = models.PositiveIntegerField(blank=True, db_index=True, default=0)
 
     class Meta:
         abstract = True

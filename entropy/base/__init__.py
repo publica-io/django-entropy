@@ -1,4 +1,4 @@
-3import datetime
+import datetime
 
 from django.conf import settings
 from django.contrib.contenttypes import generic

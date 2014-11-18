@@ -3,6 +3,7 @@ import datetime
 from django.conf import settings
 from django.contrib.contenttypes import generic
 from django.db import models
+from django.utils.encoding import force_text
 from django.utils.text import Truncator, slugify
 
 from ..fields import EnabledField, ShortTitleField, SlugField, TitleField
@@ -95,27 +96,19 @@ class BaseSlugMixin(object):
         if not self.id and not self.slug:
             if hasattr(self, 'title'):
                 sluggable = getattr(self, 'title', None)
-
-            if hasattr(self, 'name'):
+            elif hasattr(self, 'name'):
                 sluggable = getattr(self, 'name', None)
 
             if sluggable is not None:
                 self.slug = self.slugify_uniquely(sluggable)
-            else:
-                pass
 
         super(BaseSlugMixin, self).save(*args, **kwargs)
 
     def slugify_uniquely(self, sluggable):
-        model = self.__class__
-        slug = slug_prefix = slugify(sluggable)
-        index = 0
+        slug = slugify(force_text(sluggable))
+        count = self.__class__.objects.filter(slug__startswith=slug).count()
 
-        while model.objects.filter(slug=slug).exists():
-            index += 1
-            slug = slug_prefix + '-' + str(index)
-
-        return slug
+        return '{}-{}'.format(slug, count + 1) if count > 0 else slug
 
 
 class SlugMixin(BaseSlugMixin, models.Model):
@@ -370,4 +363,3 @@ class LinkURLMixin(BaseLinkMixin):
         if self.content_object and self == self.content_object:
             from django.core.exceptions import ValidationError
             raise ValidationError('An object should not link to itself.')
-

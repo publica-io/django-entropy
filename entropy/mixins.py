@@ -9,8 +9,8 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
-from ..fields import *
-from .. import settings as entropy_settings
+from .fields import *
+from . import settings as entropy_settings
 from django.conf import settings
 
 

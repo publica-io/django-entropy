@@ -9,8 +9,8 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
-from ..fields import *
-from .. import settings as entropy_settings
+from .fields import *
+from . import settings as entropy_settings
 from django.conf import settings
 
 
@@ -440,4 +440,3 @@ class LinkURLMixin(BaseLinkMixin):
         if self.content_object and self == self.content_object:
             from django.core.exceptions import ValidationError
             raise ValidationError("An object should not link to itself.")
-

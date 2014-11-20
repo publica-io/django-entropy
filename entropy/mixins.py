@@ -458,4 +458,3 @@ class LinkURLMixin(BaseLinkMixin):
         if self.content_object and self == self.content_object:
             from django.core.exceptions import ValidationError
             raise ValidationError("An object should not link to itself.")
-

@@ -74,6 +74,24 @@ class TextMixin(models.Model):
         return truncate_chars(self.text, characters)
 
 
+class RichTextMixin(models.Model):
+
+    rich_text = models.TextField(
+        blank=True,
+        default='')
+
+    class Meta:
+        abstract = True
+
+    def truncated_html(self, words=25):
+        # TOOD make this work with html
+        return truncate(self.text, words)
+
+    def truncated_html_chars(self, characters=50):
+        # TOOD make this work with html
+        return truncate_chars(self.text, characters)
+
+
 class TitleMixin(models.Model):
     '''
     Title mixin.

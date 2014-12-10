@@ -1,8 +1,8 @@
-import datetime
 import functools
 
 from django.core.exceptions import ImproperlyConfigured
 from django.db import models
+from django.utils import timezone
 
 from .settings import USE_FILEBROWSER
 
@@ -42,12 +42,12 @@ SlugField = functools.partial(models.SlugField, max_length=255)
 
 AutoDateTimeField = functools.partial(
     models.DateTimeField,
-    default=datetime.datetime.now
+    default=timezone.now
 )
 
 AutoDateField = functools.partial(
     models.DateField,
-    default=datetime.date.today
+    default=timeone.now
 )
 
 PriceField = functools.partial(

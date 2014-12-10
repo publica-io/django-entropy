@@ -1,4 +1,4 @@
-import datetime
+# -*- coding: utf-8 -*-
 import functools
 
 
@@ -7,6 +7,7 @@ from django.contrib.contenttypes.generic import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.utils import timezone
 
 
 from .fields import *
@@ -180,7 +181,7 @@ class MetadataMixin(models.Model):
 
 class CreatedMixin(models.Model):
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now, editable=False)
     created_by = models.ForeignKey(
         getattr(settings, 'AUTH_USER_MODEL', 'auth.User'),      # adds support for custom user models in 1.5
         blank=True,
@@ -190,16 +191,10 @@ class CreatedMixin(models.Model):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.created_at = datetime.datetime.now()
-            # self.created_by = request.user # Should this be assigned in admin? (as it depends on 'request')
-        super(CreatedMixin, self).save(*args, **kwargs)
-
 
 class ModifiedMixin(models.Model):
 
-    modified_at = models.DateTimeField(auto_now=True)
+    modified_at = models.DateTimeField(default=timezone.now, editable=False)
     modified_by = models.ForeignKey(
         getattr(settings, 'AUTH_USER_MODEL', 'auth.User'),      # adds support for custom user models in 1.5
         blank=True,
@@ -211,7 +206,7 @@ class ModifiedMixin(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.modified_at = datetime.datetime.now()
+            self.modified_at = timezone.now()
             # self.modified_by = request.user # Should this be assigned in admin?
         super(ModifiedMixin, self).save(*args, **kwargs)
 
@@ -233,7 +228,7 @@ class OwnerMixin(models.Model):
 class StartEndManager(models.Manager):
     def current(self):
         '''Return only models whose start/end bound now'''
-        now = datetime.datetime.now()
+        now = timezone.now()
         return self.get_query_set().filter(
             start__lte=now,
             end__gte=now,
@@ -259,7 +254,7 @@ class StartEndBaseMixin(models.Model):
 
 class StartEndMixin(StartEndBaseMixin):
 
-    start = models.DateTimeField()
+    start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(
         blank=True,
         null=True)
